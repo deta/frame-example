@@ -1,0 +1,10 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+icon: icon.png
+micros:
+  - name: main
+    src: .
+    engine: static
+    primary: true
+    serve: .
+    dev: python3 -m http.server $PORT

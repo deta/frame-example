@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>frame</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+    textarea {
+      display: block;
+      width: 70vw;
+      height: 80vh;
+      padding: 50px;
+      box-sizing: border-box;
+      border: none;
+      background-color: #f2f2f2;
+      color: #333;
+      font-family: monospace;
+      font-size: 1.3rem;
+      resize: none;
+      outline: none;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="ed"></textarea>
+  <script type="module">
+    // import base from the SDK (hosten on Space)
+    import {Base} from 'https://cdn.deta.space/js/deta@latest/deta.mjs';
+
+    // we put our logic in async function that runs automatically
+    (async function main() {
+      // let's grab the textarea element
+      const ed = document.getElementById('ed');
+
+      // give your database a name – this could be any string
+      const db = Base("note");
+
+      // try to get a item with the key "note" from our db.
+      // this will return nothing if either db or item exist
+      // then will instantiate our editor with the value in the db or an empty string
+      let note = (await db.get("note"))?.note;
+      ed.value = note || "";
+
+      // every 250ms, save our note to the db if it was edited
+      setInterval(async () => {
+        if (ed.value !== note) {
+          await db.put({key: "note", note: ed.value});
+          note = ed.value;
+        }
+      }, 250);
+    })();
+
+    // time to touch some grass now
+  </script>
+</body>
+
+</html>
